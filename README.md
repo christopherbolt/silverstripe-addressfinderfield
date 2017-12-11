@@ -1,4 +1,4 @@
-# Plato Creative - SilverStripe AddressFinderNZ Field #
+# DEVELOPMENT - SilverStripe AddressFinderNZ Field #
 A custom field for integrating the AddressFinderNZ API as both a backend and frontend field.
 
 By default the field will pull the full address from the API and will save it into the database field 'Address'.
