@@ -4,6 +4,7 @@ class AddressFinderField extends FormField {
 	protected $data;
     protected $children;
     protected $database_fields;
+    protected $hidden_fields;
 
     // Config variables
 	private static $Key;
@@ -22,8 +23,9 @@ class AddressFinderField extends FormField {
 	 * @param string $title The title of the field
 	 * @param array $databaseFields Various extra fields to store into
 	 */
-	public function __construct(DataObject $data, $title, $databaseFields = array()) {
+	public function __construct(DataObject $data, $title, $databaseFields = array(), $hiddenFields = false) {
 		$this->data = $data;
+        $this->hidden_fields = $hiddenFields;
 
         $title = !empty($title) ? $title : 'Search An Address';
 
@@ -77,9 +79,13 @@ class AddressFinderField extends FormField {
         // Add all data fields
         foreach($this->database_fields as $db => $meta){
             // Adding via array naming allows for data extraction at the setting value stage
-            $field = TextField::create($this->fullChildFieldName($db), $db, $this->recordFieldData($db))
-                ->addExtraClass('addressfinderfield-metafield')
-                ->setAttribute('metatype', $meta);
+            if($this->hidden_fields){
+                $field = HiddenField::create($this->fullChildFieldName($db), $db, $this->recordFieldData($db));
+            } else {
+                $field = TextField::create($this->fullChildFieldName($db), $db, $this->recordFieldData($db));
+            }
+
+            $field->addExtraClass('addressfinderfield-metafield')->setAttribute('metatype', $meta);
 
             $this->children->push($field);
         }
@@ -89,11 +95,14 @@ class AddressFinderField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @see https://developers.google.com/maps/documentation/javascript/reference
 	 * {@inheritdoc}
 	 */
 	public function Field($properties = array()) {
 		$this->requireDependencies();
+
+        $this->customise(array(
+            'HiddenFields' => $this->hidden_fields
+        ));
 
 		return parent::Field($properties);
 	}
@@ -113,7 +122,13 @@ class AddressFinderField extends FormField {
                 'AddressFieldID' => $fieldID
             );
 
+            // CSS
     		Requirements::css(ADDRESSFINDERFIELD_BASE .'/css/AddressFinderField.css');
+            // Javascript
+            if(!$this->isCMS()){
+                Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.min.js');
+                Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+            }
     		Requirements::javascriptTemplate(ADDRESSFINDERFIELD_BASE .'/javascript/AddressFinderField.js', $vars);
         }
 	}
@@ -181,5 +196,9 @@ class AddressFinderField extends FormField {
 
 	public function getDefaultValue($name) {
         return null;
+    }
+
+    public function isCMS() {
+        return Controller::curr() instanceof LeftAndMain;
     }
 }
