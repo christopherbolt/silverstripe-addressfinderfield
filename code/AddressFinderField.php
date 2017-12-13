@@ -23,8 +23,9 @@ class AddressFinderField extends FormField {
 	 * @param string $title The title of the field
 	 * @param array $databaseFields Various extra fields to store into
 	 */
-	public function __construct(DataObject $data, $title, $databaseFields = array(), $hiddenFields = false) {
+	public function __construct(DataObject $data, $name, $title = null, $databaseFields = array(), $hiddenFields = false) {
 		$this->data = $data;
+        $this->name = $name;
         $this->hidden_fields = $hiddenFields;
 
         $title = !empty($title) ? $title : 'Search An Address';
@@ -54,7 +55,8 @@ class AddressFinderField extends FormField {
 
 	// Auto generate a name
 	public function getName() {
-        return 'addresFinderField';
+        $name = empty($this->name) ? 'addresFinderField' : $this->name;
+        return $name;
 	}
 
 	/**
