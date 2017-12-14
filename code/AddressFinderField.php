@@ -76,6 +76,8 @@ class AddressFinderField extends FormField {
         $this->children = new FieldList(
             TextField::create($name, '')
                 ->setAttribute('placeholder', Config::inst()->get('AddressFinderField', 'Placeholder_text'))
+                ->setAttribute('key', Config::inst()->get('AddressFinderField', 'Key'))
+                ->addExtraClass('address-finder-field')
         );
 
         // Add all data fields
@@ -131,7 +133,8 @@ class AddressFinderField extends FormField {
                 Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.min.js');
                 Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
             }
-    		Requirements::javascriptTemplate(ADDRESSFINDERFIELD_BASE .'/javascript/AddressFinderField.js', $vars);
+    		//Requirements::javascriptTemplate(ADDRESSFINDERFIELD_BASE .'/javascript/AddressFinderField.js', $vars);
+            Requirements::javascript(ADDRESSFINDERFIELD_BASE .'/javascript/AddressFinderField.js');
         }
 	}
 
