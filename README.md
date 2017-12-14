@@ -1,7 +1,7 @@
 # DEVELOPMENT - SilverStripe AddressFinderNZ Field #
 A custom field for integrating the AddressFinderNZ API as both a backend and frontend field.
 ```
-AddressFinderField::create(DataObject $data, $name, $title, $databaseFields = array(), $hiddenFields = false)
+AddressFinderField::create(DataObject $data, $name, $title = null, $databaseFields = array(), $hiddenFields = false)
 ```
 By default the field will pull the full address from the API and will save it into the database field 'Address'.
 
