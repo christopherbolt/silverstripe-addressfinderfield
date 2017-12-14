@@ -84,9 +84,9 @@ class AddressFinderField extends FormField {
         foreach($this->database_fields as $db => $meta){
             // Adding via array naming allows for data extraction at the setting value stage
             if($this->hidden_fields){
-                $field = HiddenField::create($this->fullChildFieldName($db), $db, $this->recordFieldData($db));
+                $field = HiddenField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
             } else {
-                $field = TextField::create($this->fullChildFieldName($db), $db, $this->recordFieldData($db));
+                $field = TextField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
             }
 
             $field->addExtraClass('addressfinderfield-metafield')->setAttribute('metatype', $meta);
