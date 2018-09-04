@@ -5,7 +5,6 @@
     "version": "1.0",
     "keywords": ["address","finder", "addressfinderfield", "silverstripe"],
     "homepage": "https://github.com/christopherbolt/address-finder",
-    "license": "BSD",
     "require": {
         "php": ">=5.3.0",
         "composer/installers": "~1.0"
