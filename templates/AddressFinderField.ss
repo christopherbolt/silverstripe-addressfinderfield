@@ -16,7 +16,7 @@
 </div>
 <div class="addressfinderfield-values clear">
 	<% loop ChildFields %>
-		<% if Middle || Last %>
+		<% if not First %>
 			<div class="addressfinderfield-children clear">
 				<% if Top.HiddenFields %>
 					<div class="middleColumn">

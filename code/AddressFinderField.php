@@ -13,9 +13,7 @@ class AddressFinderField extends FormField {
 
     // Specifies which fields to save into the database
     // database field => api reference
-    private static $default_database_fields = array(
-        'Address' => 'a'
-    );
+    private static $default_database_fields = array();
 
 
 	/**
