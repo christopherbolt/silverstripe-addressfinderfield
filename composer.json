@@ -4,12 +4,21 @@
     "description": "Save address information based on the AddressFinderNZ API into DataObject fields.",
     "keywords": ["address","finder", "addressfinderfield", "silverstripe"],
     "homepage": "https://github.com/christopherbolt/silverstripe-addressfinderfield",
+    "authors": [
+        {
+            "name": "Chris Bolt",
+            "email": "chris@christopherbolt.com"
+        }
+    ],
     "require": {
         "php": ">=5.3.0",
         "silverstripe/cms": "^3.1",
     	"silverstripe/framework": "^3.1"
     },
     "extra" : {
-        "installer-name": "addressfinderfield"
+        "installer-name": "addressfinderfield",
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
