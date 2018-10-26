@@ -7,7 +7,7 @@ By default the field will pull the full address from the API and will save it in
 
 Alternatively you can specifiy multiple fields from the API to be saved to the database. You can do this by passing in the alternative database fields array as the 3rd variable of the field constructor.
 The key of the array is the database field and the value should match the meta data returned by the API.
-https://addressfinder.nz/docs/address_metadata_api/
+https://addressfinder.nz/api/nz/address/metadata
 
 ### Requirements ###
 This installer requires you have the following:
@@ -42,7 +42,7 @@ private static $db = array(
 ```
 2. Specify multiple address fields to save to your object
 NOTE: The key of the array is the database field and the value should match the meta data returned by the API.
-https://addressfinder.nz/docs/address_metadata_api/
+https://addressfinder.nz/api/nz/address/metadata
 ```
 $addressConfig = array(
   'Address' => 'a',
