@@ -71,12 +71,13 @@ class AddressFinderField extends FormField {
         }
 
         // Set the address finder field
-        $this->children = new FieldList(
-            TextField::create($name, '')
-                ->setAttribute('placeholder', Config::inst()->get('AddressFinderField', 'Placeholder_text'))
-                ->setAttribute('key', Config::inst()->get('AddressFinderField', 'Key'))
-                ->addExtraClass('address-finder-field')
-        );
+        $this->children = new FieldList();
+        if ($this->hidden_fields) {
+            $this->children->push(
+                TextField::create($name, '')
+                    ->setAttribute('placeholder', Config::inst()->get('AddressFinderField', 'Placeholder_text'))
+            );
+        }
 
         // Add all data fields
         foreach($this->database_fields as $db => $meta){
@@ -84,13 +85,21 @@ class AddressFinderField extends FormField {
             if($this->hidden_fields){
                 $field = HiddenField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
             } else {
-                $field = TextField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
+                if ($meta == 'postcode') {
+                    $field = NumericField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
+                } else {
+                    $field = TextField::create($this->fullChildFieldName($db), $this->data->fieldLabel($db), $this->recordFieldData($db));
+                }
             }
 
-            $field->addExtraClass('addressfinderfield-metafield')->setAttribute('metatype', $meta);
+            $field->addExtraClass('addressfinderfield-metafield')->setAttribute('data-metatype', $meta);
 
             $this->children->push($field);
         }
+        
+        $this->children->first()
+            ->setAttribute('data-key', Config::inst()->get('AddressFinderField', 'Key'))
+            ->addExtraClass('address-finder-field');
 
 		return $this->children;
 	}
@@ -144,6 +153,7 @@ class AddressFinderField extends FormField {
 	 * {@inheritdoc}
 	 */
 	public function setValue($record) {
+        
         // Check for defined databasefields
         if(!empty($this->database_fields)){
             $dbFields = $this->database_fields;
@@ -152,20 +162,28 @@ class AddressFinderField extends FormField {
         }
         
 		// If fields are still empty then load into main field
-		if (empty($dbFields)) {
+		if (empty($dbFields) && is_string($record)) {
 			$this->value = $record;
 			$this->getChildFields()->fieldByName($this->getName())->setValue($record);
 		}
-
+        
         // Loop fields and save the info
         foreach($dbFields as $db => $meta){
             $fieldName = $this->fullChildFieldName($db);
             $field = $this->getChildFields()->fieldByName($fieldName);
-            $field->setValue(
-    			$record[$db]
-    		);
+            if (is_array($record)) {
+                $field->setValue(
+                    $record[$db]
+                );
+            } else if (is_object($record)) {
+                $field->setValue(
+                    $record->$db
+                );
+            }
         }
-
+                
+        $this->value = $record;
+        
 		return $this;
 	}
 
@@ -221,4 +239,13 @@ class AddressFinderField extends FormField {
     public function isCMS() {
         return Controller::curr() instanceof LeftAndMain;
     }
+    
+    // Exclude value from attributes because it's an array and causes issues
+    public function getAttributes($attributes = null) {
+        $attributes = parent::getAttributes($attributes);
+        foreach($attributes as $k => $v) {
+            if (!is_string($v)) unset($attributes[$k]);
+        }
+        return $attributes;
+	}
 }
