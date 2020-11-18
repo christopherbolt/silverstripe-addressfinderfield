@@ -105,6 +105,10 @@ class AddressFinderField extends FormField {
         $this->customise(array(
             'HiddenFields' => $this->hidden_fields
         ));
+        
+		foreach($this->getAttributes() as $k => $v) {
+			if (!$this->children[0]->getAttribute($k))$this->children[0]->setAttribute($k,$v);
+		}
 
 		return parent::Field($properties);
 	}
@@ -146,6 +150,12 @@ class AddressFinderField extends FormField {
         } else {
             $dbFields = Config::inst()->get('AddressFinderField', 'default_database_fields');
         }
+        
+		// If fields are still empty then load into main field
+		if (empty($dbFields)) {
+			$this->value = $record;
+			$this->getChildFields()->fieldByName($this->getName())->setValue($record);
+		}
 
         // Loop fields and save the info
         foreach($dbFields as $db => $meta){
@@ -170,6 +180,13 @@ class AddressFinderField extends FormField {
         } else {
             $dbFields = Config::inst()->get('AddressFinderField', 'default_database_fields');
         }
+        
+		// If fields are still empty then load into main field
+		if (empty($dbFields)) {
+			$this->value = $record;
+			$field = $this->getChildFields()->fieldByName($this->getName());
+			$record->setCastedField($this->getName(), $field->dataValue());
+		}
 
         // Loop fields and save the info
         foreach($dbFields as $db => $meta){
